@@ -3,6 +3,9 @@ from setuptools import setup
 
 # pip install twine
 # pip install wheel
+# change version in module
+# change version below
+# git tag version
 # rd /s /q dist
 # python setup.py sdist bdist_wheel
 # twine check dist/*
@@ -18,12 +21,12 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="beg",
-    version="0.0.1",
+    name="begs",
+    version="0.0.2",
     description="A partial rewrite of the famous requests library with a better defaults and certificate handling",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/grintor/beg",
+    url="https://github.com/grintor/begs",
     author="Chris Wheeler",
     author_email="grintor@gmail.com",
     license="MIT",
@@ -36,7 +39,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
     ],
-    py_modules=["beg"],
+    py_modules=["begs"],
     include_package_data=False,
     install_requires=[],
 )

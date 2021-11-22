@@ -41,7 +41,7 @@ def request(verb, url, **kwargs):
     headers = {k.lower(): v for k, v in headers.items()} # lowercase the header keys
 
     if 'user-agent' not in headers.keys():
-        headers['user-agent'] = f'Mozilla/5.0 (compatible; t2t_request/{VERSION}; +http://www.tier2.tech/)'
+        headers['user-agent'] = f'Mozilla/5.0 (compatible; begs/{VERSION}; +https://pypi.org/project/begs/)'
 
     if json:
         request_body = jsonlib.dumps(json).encode('UTF-8')

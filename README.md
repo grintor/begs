@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/begs.svg)](https://badge.fury.io/py/begs)
+
 # begs
 #### A partial rewrite of the famous requests library with a better defaults and certificate handling
 

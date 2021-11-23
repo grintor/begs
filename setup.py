@@ -23,7 +23,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="begs",
-    version="0.1.7",
+    version="0.1.8",
     description="A rewrite of the famous requests library with better defaults and certificate handling",
     long_description=README,
     long_description_content_type="text/markdown",

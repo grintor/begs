@@ -18,14 +18,13 @@ default_retry_backoff = 2
 def request(verb, url, **kwargs):
 
     supported_kwargs = [
-        'body', 'headers', 'timeout', 'ssl_context', 'data', 'json', 'params', 'retries', 'retry_delay', 'retry_backoff', 'force_retry'
+        'headers', 'timeout', 'ssl_context', 'data', 'json', 'params', 'retries', 'retry_delay', 'retry_backoff', 'force_retry'
     ]
 
     for kwarg in kwargs:
         if kwarg not in supported_kwargs:
             raise NotImplementedError(f"unknown kwarg: {kwarg}")
 
-    request_body   = kwargs.get('body', b'')
     headers        = kwargs.get('headers', {})
     timeout        = kwargs.get('timeout', default_timeout)
     ssl_context    = kwargs.get('ssl_context', default_ssl_context)
@@ -34,11 +33,11 @@ def request(verb, url, **kwargs):
     retry_delay    = kwargs.get('retry_delay', default_retry_delay)
     retry_backoff  = kwargs.get('retry_backoff', default_retry_backoff)
     force_retry    = kwargs.get('force_retry', False)
-    data           = kwargs.get('data', None)
+    data           = kwargs.get('data', b'')
     params         = kwargs.get('params', None)
     
     if data:
-        assert isinstance(data, (dict, str)), "data param must be a dict or a string"
+        assert isinstance(data, (dict, str, bytes)), "data param must be a dict, bytes, or a string"
         
     if params:
         assert isinstance(params, dict), "params must be a dict or a string"
@@ -52,22 +51,26 @@ def request(verb, url, **kwargs):
         headers['user-agent'] = f'Mozilla/5.0 (compatible; begs/{VERSION}; +https://pypi.org/project/begs/)'
 
     if json:
-        request_body = jsonlib.dumps(json).encode('UTF-8')
         headers['content-type'] = 'application/json'
+        data = jsonlib.dumps(json).encode('UTF-8')
+        
+    if isinstance(data, bytes):
+        if not 'content-type' in headers:
+            headers['content-type'] = 'application/octet-stream'
 
     if isinstance(data, str):
         if not 'content-type' in headers:
             headers['content-type'] = 'text/plain'
-        request_body = data.encode('UTF-8')
+        data = data.encode('UTF-8')
 
     if isinstance(data, dict):
         headers['content-type'] = 'application/x-www-form-urlencoded'
-        request_body = urlencode(data).encode('UTF-8')
+        data = urlencode(data).encode('UTF-8')
 
     if params:
         url = f"{url}?{urlencode(params)}"
 
-    req_class = urllib.request.Request(url=url, data=request_body, headers=headers, method=verb)
+    req_class = urllib.request.Request(url=url, data=data, headers=headers, method=verb)
 
     request_attempts = 0
     attempts_remaining = retries + 1

@@ -24,7 +24,7 @@ README = (HERE / "README.md").read_text()
 setup(
     name="begs",
     version="0.1.7",
-    description="A partial rewrite of the famous requests library with a better defaults and certificate handling",
+    description="A rewrite of the famous requests library with better defaults and certificate handling",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/grintor/begs",

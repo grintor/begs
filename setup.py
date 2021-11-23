@@ -7,6 +7,7 @@ from setuptools import setup
 # change version below
 # git tag version
 # rd /s /q dist
+# rd /s /q build
 # python setup.py sdist bdist_wheel
 # twine check dist/*
 # twine upload --repository-url https://test.pypi.org/legacy/ dist/*
@@ -22,7 +23,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="begs",
-    version="0.1.4",
+    version="0.1.7",
     description="A partial rewrite of the famous requests library with a better defaults and certificate handling",
     long_description=README,
     long_description_content_type="text/markdown",

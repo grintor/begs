@@ -11,7 +11,7 @@ from setuptools import setup
 # twine check dist/*
 # twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 # twine upload dist/*
-
+# pip install --upgrade begs
 
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
@@ -22,7 +22,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="begs",
-    version="0.0.2",
+    version="0.1.4",
     description="A partial rewrite of the famous requests library with a better defaults and certificate handling",
     long_description=README,
     long_description_content_type="text/markdown",

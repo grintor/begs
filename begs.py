@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 
 VERSION = 0.1
 ALWAYS_SAFE_RETRY_STATUSES = [413, 425, 429, 503]
-IDEMPOTENT_SAFE_RETRY_STATUSES = [408, 409, 500, 502, 503, 504]
+IDEMPOTENT_SAFE_RETRY_STATUSES = [408, 409, 500, 502, 504]
 SAFE_VERBS = ['GET', 'HEAD', 'OPTIONS', 'TRACE']
 
 default_ssl_context = ssl.create_default_context()
@@ -25,7 +25,7 @@ def request(verb, url, **kwargs):
         if kwarg not in supported_kwargs:
             raise NotImplementedError(f"unknown kwarg: {kwarg}")
 
-    body           = kwargs.get('body', b'')
+    request_body   = kwargs.get('body', b'')
     headers        = kwargs.get('headers', {})
     timeout        = kwargs.get('timeout', default_timeout)
     ssl_context    = kwargs.get('ssl_context', default_ssl_context)
@@ -36,11 +36,19 @@ def request(verb, url, **kwargs):
     force_retry    = kwargs.get('force_retry', False)
     data           = kwargs.get('data', None)
     params         = kwargs.get('params', None)
+    
+    if data:
+        assert isinstance(data, (dict, str)), "data param must be a dict or a string"
+        
+    if params:
+        assert isinstance(params, dict), "params must be a dict or a string"
+
+    assert isinstance(headers, dict), "headers param must be a dict"
 
     verb = verb.upper() # from 'post' to POST, etc...
     headers = {k.lower(): v for k, v in headers.items()} # lowercase the header keys
 
-    if 'user-agent' not in headers.keys():
+    if 'user-agent' not in headers:
         headers['user-agent'] = f'Mozilla/5.0 (compatible; begs/{VERSION}; +https://pypi.org/project/begs/)'
 
     if json:
@@ -58,11 +66,6 @@ def request(verb, url, **kwargs):
 
     if params:
         url = f"{url}?{urlencode(params)}"
-
-    if not data:
-        request_body = b''
-    else:
-        assert isinstance(data, (dict, str)), "data param must be a dict or a string"
 
     req_class = urllib.request.Request(url=url, data=request_body, headers=headers, method=verb)
 
@@ -107,8 +110,8 @@ def request(verb, url, **kwargs):
 
         time.sleep(retry_delay)
         retry_delay *= retry_backoff
-        
-        
+
+
     class ReturnedResponse(object):
         def json(self):
             return jsonlib.loads(self.text)
@@ -119,7 +122,6 @@ def request(verb, url, **kwargs):
                 'status': self.status,
                 'ok': self.ok,
                 'headers': dict,
-                'headers_multi': dict,
                 'text': str,
                 'body': bytes,
                 'attempts': self.attempts

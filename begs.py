@@ -154,7 +154,7 @@ def request(verb, url, **kwargs):
     ReturnedResponse.headers = headers
     ReturnedResponse.headers_multi = headers_multi
 
-    content_type = parse_header(headers['content-type'])
+    content_type = parse_header(headers.get('content-type', ''))
 
     for field in content_type:
         if isinstance(field, dict):
